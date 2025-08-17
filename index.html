@@ -10,12 +10,18 @@
   }
   h2 {
     text-align: center;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
   }
   th,
   td {
     border: 1px solid #aaa;
     padding: 6px 12px;
     text-align: right;
+  }
+  thead th {
+    background: #d0ddb7;
   }
   td.selected {
     background: #ffd700;
@@ -35,8 +41,13 @@
     background: #d0ddb7;
   }
   td:not(.selected):hover {
-    background: #e0e0e0;
+    background: #647194;
     cursor: pointer;
+  }
+
+  body {
+    padding-left: 48px;
+    padding-right: 48px;
   }
 </style>
 
@@ -46,11 +57,13 @@
 
 <body>
   <h2>Verbrennungsmotor</h2>
+  <p>Die Tabelle zeigt die Kosten für einen Verbrennungsmotor in Euro pro Liter Kraftstoff (€/l) und den Verbrauch in Litern pro 100 Kilometer (l/100km). Klicken Sie auf eine Zelle, um die entsprechenden Werte in der Elektromotor-Tabelle hervorzuheben.</p>
   <table id="tableVerbrenner" class="verbrenner-table">
     <thead></thead>
     <tbody></tbody>
   </table>
   <h2>Elektromotor</h2>
+  <p>In dieser Preistabelle werden die Kombinationen von Kosten und Verbrauch für einen Elektromotor in grün angezeigt, die preiswerter sind als die oben ausgewählte Variante. Dies ermöglicht einen direkten Vergleich der beiden Antriebstechnologien. </p>
   <table id="tableElektro" class="elektro-table">
     <thead></thead>
     <tbody></tbody>
