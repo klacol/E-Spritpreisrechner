@@ -1,0 +1,198 @@
+<head>
+
+
+  <style>
+  table {
+    border-collapse: collapse;
+    margin-bottom: 30px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  h2 {
+    text-align: center;
+  }
+  th,
+  td {
+    border: 1px solid #aaa;
+    padding: 6px 12px;
+    text-align: right;
+  }
+  td.selected {
+    background: #ffd700;
+  }
+  td.less-expensive {
+    background: #129138;
+  }
+  td.more-expensive {
+    background: #e21212;
+  }
+  td.einheit {
+    font-weight: bold;
+    background: #d0ddb7;
+  }
+  td.zeilenwert {
+    font-weight: bold;
+    background: #d0ddb7;
+  }
+  td:not(.selected):hover {
+    background: #e0e0e0;
+    cursor: pointer;
+  }
+</style>
+
+</head>
+
+
+
+<body>
+  <h2>Verbrennungsmotor</h2>
+  <table id="tableVerbrenner" class="verbrenner-table">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+  <h2>Elektromotor</h2>
+  <table id="tableElektro" class="elektro-table">
+    <thead></thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+
+  // Achsenwerte für Tabelle 1 (Verbrennungsmotor)
+  const tableVerbrennerCols = [4.0, 5, 6.0, 7.0, 8.0, 9.0, 10, 11.0, 12.0, 13.0];
+  const tableVerbrennerRows = [1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1];
+  // Achsenwerte für Tabelle 2 (Elektromotor)
+  const tableElektroCols = [8.0, 10, 12.0, 14.0, 16.0, 18.0, 20, 22.0, 24.0, 26.0];
+  const tableElektroRows = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0];
+
+    // Hilfsfunktion zum Rendern einer Tabelle
+    function renderTable(tableId, data, cellClickHandler) {
+    const table = document.getElementById(tableId);
+    const thead = table.querySelector('thead');
+    const tbody = table.querySelector('tbody');
+    thead.innerHTML = '';
+    tbody.innerHTML = '';
+
+    // Spalten- und Zeilenwerte bestimmen
+    let cols, rows, einheit, label;
+    if (tableId === 'tableVerbrenner') {
+      cols = tableVerbrennerCols;
+      rows = tableVerbrennerRows;
+      einheit = '€/l';
+      label = 'l/100km';
+    } else {
+      cols = tableElektroCols;
+      rows = tableElektroRows;
+      einheit = '€/kWh';
+      label = 'kWh/100km';
+    }
+
+    // Kopfzeile mit Beschriftung über alle Spalten
+    const headerTr = document.createElement('tr');
+    const headerTh = document.createElement('th');
+    headerTh.colSpan = cols.length + 2;
+    headerTh.textContent = label;
+    headerTh.style.textAlign = 'center';
+    headerTr.appendChild(headerTh);
+    thead.appendChild(headerTr);
+
+    // 2. Kopfzeile: Einheiten-Label und Spaltenwerte
+    const tr2 = document.createElement('tr');
+    const thEinheit = document.createElement('th');
+    thEinheit.textContent = einheit;
+    thEinheit.rowSpan = rows.length;
+    thEinheit.style.verticalAlign = 'middle';
+    tr2.appendChild(thEinheit);
+    const thLeer = document.createElement('th');
+    thLeer.textContent = '';
+    tr2.appendChild(thLeer);
+    cols.forEach(val => {
+      const th = document.createElement('th');
+      th.textContent = val;
+      tr2.appendChild(th);
+    });
+    thead.appendChild(tr2);
+
+    // Tabellenkörper
+    rows.forEach((rowVal, rowIdx) => {
+      const tr = document.createElement('tr');
+      // Erste Spalte: Einheitenzelle nur in der ersten Zeile, mit rowspan
+      if (rowIdx === 0) {
+        const tdEinheit = document.createElement('td');
+        tdEinheit.textContent = einheit;
+        tdEinheit.rowSpan = rows.length;
+        tdEinheit.style.verticalAlign = 'middle';
+        tdEinheit.classList.add('einheit');
+        tr.appendChild(tdEinheit);
+      }
+      // Zeilenwert
+      const tdRow = document.createElement('td');
+      tdRow.textContent = rowVal.toFixed(1).replace('.', ',');
+      tdRow.classList.add('zeilenwert');
+      tr.appendChild(tdRow);
+      // Werte
+      cols.forEach((colVal, colIdx) => {
+        const td = document.createElement('td');
+        const value = rowVal * colVal;
+        td.textContent = value.toFixed(1).replace('.', ',');
+        // Nur Zellen in der Verbrenner-Tabelle ab Spalte 3 selektierbar
+        if (
+          cellClickHandler &&
+          tableId === 'tableVerbrenner' &&
+          colIdx >= 0 && rowIdx >= 0
+        ) {
+          td.style.cursor = 'pointer';
+          td.addEventListener('click', () => cellClickHandler(rowIdx, colIdx, value, td));
+        }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    }
+
+    let selectedValue = null;
+    let selectedCell = null;
+
+    // Klick-Handler für Tabelle 1
+    function handleTable1Click(rowIdx, colIdx, value, td) {
+        // Auswahl visuell hervorheben
+        if (selectedCell) selectedCell.classList.remove('selected');
+        td.classList.add('selected');
+        selectedCell = td;
+        selectedValue = value;
+        // Tabelle 2 aktualisieren
+        updateTable2Highlight();
+    }
+
+    // Markiere in Tabelle 2 alle Zellen rot, die teurer sind
+    function updateTable2Highlight() {
+        const table = document.getElementById('tableElektro');
+        const cols = tableElektroCols;
+        const rows = tableElektroRows;
+        const tbody = table.querySelector('tbody');
+    for (let r = 0; r < rows.length; r++) {
+      const tr = tbody.rows[r];
+      for (let c = 0; c < cols.length; c++) {
+        // In der ersten Zeile gibt es die Einheitenzelle, ab der zweiten nicht mehr
+        const cellOffset = (r === 0) ? 2 : 1;
+        const cell = tr.cells[c + cellOffset];
+        if (!cell) continue;
+        const cellValue = +(rows[r] * cols[c]).toFixed(2);
+        cell.classList.remove('more-expensive');
+        cell.classList.remove('less-expensive');
+        if (selectedValue !== null && typeof cellValue === 'number' && cellValue > selectedValue) {
+          cell.classList.add('more-expensive');
+        } else {
+          cell.classList.add('less-expensive');
+        }
+      }
+    }
+    }
+
+    // Initiales Rendern
+    renderTable('tableVerbrenner', null, handleTable1Click);
+    renderTable('tableElektro', null, null);
+  </script>
+
+
+</body>
