@@ -44,6 +44,9 @@
     background: #647194;
     cursor: pointer;
   }
+  tr.preis-highlight td {
+    background: #b7e0dd !important;
+  }
 
   body {
     padding-left: 48px;
@@ -205,6 +208,36 @@
     // Initiales Rendern
     renderTable('tableVerbrenner', null, handleTable1Click);
     renderTable('tableElektro', null, null);
+
+    // Spritpreise abrufen und Zeile markieren
+    fetch('https://corsproxy.io/?https://www.benzinpreis-aktuell.de/api.v2.php?data=nationwide')
+      .then(response => response.json())
+      .then(data => {
+        // Durchschnitt berechnen
+        const prices = [parseFloat(data.super.replace(',', '.')), parseFloat(data.e10.replace(',', '.')), parseFloat(data.diesel.replace(',', '.'))];
+        const avg = prices.reduce((a, b) => a + b, 0) / prices.length;
+        console.log('Durchschnittspreis:', avg);
+        // Finde die Zeile mit dem nächsten Wert
+        const table = document.getElementById('tableVerbrenner');
+        const tbody = table.querySelector('tbody');
+        let minDiff = Infinity;
+        let bestRow = null;
+        for (let r = 0; r < tableVerbrennerRows.length; r++) {
+          const rowVal = tableVerbrennerRows[r];
+          const diff = Math.abs(rowVal - avg);
+          if (diff < minDiff) {
+            minDiff = diff;
+            bestRow = r;
+          }
+        }
+        // Markiere die Zeile
+        if (bestRow !== null) {
+          const tr = tbody.rows[bestRow];
+          tr.classList.add('preis-highlight');
+        }
+      })
+      .catch(e => { /* Fehler ignorieren */ });
+
   </script>
 
 
