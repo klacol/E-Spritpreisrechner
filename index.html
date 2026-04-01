@@ -1,56 +1,158 @@
 <head>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>E-Spritpreisrechner</title>
 
   <style>
-  table {
-    border-collapse: collapse;
-    margin-bottom: 30px;
-    margin-left: auto;
-    margin-right: auto;
+  * {
+    box-sizing: border-box;
   }
-  h2 {
-    text-align: center;
-    max-width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-  }
-  th,
-  td {
-    border: 1px solid #aaa;
-    padding: 6px 12px;
-    text-align: right;
-  }
-  thead th {
-    background: #d0ddb7;
-  }
-  td.selected {
-    background: #ffd700;
-  }
-  td.less-expensive {
-    background: #129138;
-  }
-  td.more-expensive {
-    background: #e21212;
-  }
-  td.einheit {
-    font-weight: bold;
-    background: #d0ddb7;
-  }
-  td.zeilenwert {
-    font-weight: bold;
-    background: #d0ddb7;
-  }
-  td:not(.selected):hover {
-    background: #647194;
-    cursor: pointer;
-  }
-  tr.preis-highlight td {
-    background: #b7e0dd !important;
+  
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 20px;
+    margin: 0;
+    min-height: 100vh;
   }
 
-  body {
-    padding-left: 48px;
-    padding-right: 48px;
+  h1 {
+    text-align: center;
+    color: #ffffff;
+    font-size: 2.5em;
+    margin: 20px 0 10px 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+
+  .subtitle {
+    text-align: center;
+    color: #f0f0f0;
+    font-size: 1.1em;
+    margin-bottom: 30px;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: #ffffff;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  }
+
+  h2 {
+    text-align: center;
+    color: #667eea;
+    font-size: 1.8em;
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #667eea;
+  }
+
+  p {
+    text-align: center;
+    color: #555;
+    line-height: 1.6;
+    margin: 15px 20px;
+  }
+
+  a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  table {
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 30px auto;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  th,
+  td {
+    border: 1px solid #e0e0e0;
+    padding: 12px 16px;
+    text-align: right;
+    transition: all 0.3s ease;
+  }
+
+  thead th {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+    font-size: 0.95em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  td.selected {
+    background: #ffd700 !important;
+    font-weight: bold;
+    transform: scale(1.05);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+  }
+
+  td.less-expensive {
+    background: #4caf50;
+    color: white;
+  }
+
+  td.more-expensive {
+    background: #f44336;
+    color: white;
+  }
+
+  td.einheit {
+    font-weight: bold;
+    background: linear-gradient(135deg, #a8b5ff 0%, #c4b5fd 100%);
+    color: #333;
+  }
+
+  td.zeilenwert {
+    font-weight: bold;
+    background: linear-gradient(135deg, #a8b5ff 0%, #c4b5fd 100%);
+    color: #333;
+  }
+
+  td:not(.selected):not(.less-expensive):not(.more-expensive):not(.einheit):not(.zeilenwert):hover {
+    background: #e3f2fd;
+    cursor: pointer;
+    transform: scale(1.02);
+  }
+
+  tr.preis-highlight td {
+    background: #b3e5fc !important;
+    border: 2px solid #0288d1 !important;
+    font-weight: 600;
+  }
+
+  @media (max-width: 768px) {
+    body {
+      padding: 10px;
+    }
+    
+    .container {
+      padding: 20px;
+    }
+    
+    h1 {
+      font-size: 1.8em;
+    }
+    
+    table {
+      font-size: 0.85em;
+    }
+    
+    th, td {
+      padding: 8px 10px;
+    }
   }
 </style>
 
@@ -59,19 +161,24 @@
 
 
 <body>
-  <h2>Verbrennungsmotor</h2>
+  <h1>⚡ E-Spritpreisrechner</h1>
+  <p class="subtitle">Vergleichen Sie die Kosten von Elektro- und Verbrennungsmotoren</p>
+  
+  <div class="container">
+    <h2>🚗 Verbrennungsmotor</h2>
   <p>Die Tabelle zeigt die Kosten für einen Verbrennungsmotor in Euro pro Liter Kraftstoff (€/l) und den Verbrauch in Litern pro 100 Kilometer (l/100km). Klicken Sie auf eine Zelle, um die entsprechenden Werte in der Elektromotor-Tabelle hervorzuheben.</p>
   <p>Der aktuelle Durchschnittspreis für Sprit wird ermittelt und in der Tabelle hervorgehoben dank des API von <a href="https://www.benzinpreis-aktuell.de/artikel-104-neue-api-fuer-den-abruf-der-aktuellen-spritpreise-verfuegbar.html" target="_blank">https://www.benzinpreis-aktuell.de/ </a>.</p>
   <table id="tableVerbrenner" class="verbrenner-table">
     <thead></thead>
     <tbody></tbody>
   </table>
-  <h2>Elektromotor</h2>
+  <h2>⚡ Elektromotor</h2>
   <p>In dieser Preistabelle werden die Kombinationen von Kosten und Verbrauch für einen Elektromotor in grün angezeigt, die preiswerter sind als die oben ausgewählte Variante. Dies ermöglicht einen direkten Preisvergleich der "Sprit"-Kosten für die beiden Antriebstechnologien. </p>
   <table id="tableElektro" class="elektro-table">
     <thead></thead>
     <tbody></tbody>
   </table>
+  </div>
 
   <script>
   // Achsenwerte für Tabelle 1 (Verbrennungsmotor)
