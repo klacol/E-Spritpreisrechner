@@ -94,10 +94,12 @@
   }
 
   td.selected {
-    background: #ffd700 !important;
+    background: #ff6b00 !important;
+    color: white !important;
     font-weight: bold;
     transform: scale(1.05);
-    box-shadow: 0 0 10px rgba(255, 215, 0, 0.5);
+    box-shadow: 0 0 15px rgba(255, 107, 0, 0.8);
+    border: 3px solid #ff4500 !important;
   }
 
   td.less-expensive {
@@ -163,18 +165,21 @@
 
 <body>
   <h1>⚡ E-Spritpreisrechner</h1>
-  <p class="subtitle">Vergleichen Sie die Kosten von Elektro- und Verbrennungsmotoren</p>
+  <p class="subtitle">Vergleichen Sie die Antriebskosten von Elektro- und Verbrennungsmotoren</p>
   
   <div class="container">
     <h2>🚗 Verbrennungsmotor</h2>
-  <p>Die Tabelle zeigt die Kosten für einen Verbrennungsmotor in Euro pro Liter Kraftstoff (€/l) und den Verbrauch in Litern pro 100 Kilometer (l/100km). Klicken Sie auf eine Zelle, um die entsprechenden Werte in der Elektromotor-Tabelle hervorzuheben.</p>
+  <p>Die Tabelle zeigt die <strong>Kosten in €/100km</strong> basierend auf dem Kraftstoffpreis (€/l) und dem Verbrauch (l/100km). <strong>Klicken Sie auf eine Zelle</strong>, um die entsprechenden Werte in der Elektromotor-Tabelle hervorzuheben.</p>
+  <p><em>💡 Typische Verbräuche: Kleinwagen 5-6 l/100km, Mittelklasse 6-8 l/100km, SUV/Oberklasse 8-12 l/100km</em></p>
   <p>Der aktuelle Durchschnittspreis für Sprit wird ermittelt und in der Tabelle hervorgehoben dank des API von <a href="https://www.benzinpreis-aktuell.de/artikel-104-neue-api-fuer-den-abruf-der-aktuellen-spritpreise-verfuegbar.html" target="_blank">https://www.benzinpreis-aktuell.de/ </a>.</p>
   <table id="tableVerbrenner" class="verbrenner-table">
     <thead></thead>
     <tbody></tbody>
   </table>
   <h2>⚡ Elektromotor</h2>
-  <p>In dieser Preistabelle werden die Kombinationen von Kosten und Verbrauch für einen Elektromotor in grün angezeigt, die preiswerter sind als die oben ausgewählte Variante. Dies ermöglicht einen direkten Preisvergleich der "Sprit"-Kosten für die beiden Antriebstechnologien. </p>
+  <p>Diese Tabelle zeigt die <strong>Kosten in €/100km</strong> basierend auf dem Strompreis (€/kWh) und dem Verbrauch (kWh/100km). Kombinationen, die <span style="color: #4caf50; font-weight: bold;">günstiger</span> sind als die ausgewählte Verbrenner-Variante, werden grün markiert. <span style="color: #f44336; font-weight: bold;">Teurere</span> Kombinationen erscheinen rot.</p>
+  <p><em>💡 Typische Verbräuche: Kompakt-E-Auto 13-18 kWh/100km, Mittelklasse 15-22 kWh/100km, E-SUV 20-26 kWh/100km</em></p>
+  <p><em>💡 Typische Stromkosten: PV-Eigenstrom 0,05 €/kWh, Heimladen 0,30 €/kWh, Preiswertes Unterwegsladen 0,50 €/kWh, Teures Unterwegsladen 0,80 €/kWh</em></p>
   <table id="tableElektro" class="elektro-table">
     <thead></thead>
     <tbody></tbody>
@@ -216,7 +221,7 @@
     const headerTr = document.createElement('tr');
     const headerTh = document.createElement('th');
     headerTh.colSpan = cols.length + 2;
-    headerTh.textContent = label;
+    headerTh.textContent = label + ' → Kosten in €/100km';
     headerTh.style.textAlign = 'center';
     headerTr.appendChild(headerTh);
     thead.appendChild(headerTr);
